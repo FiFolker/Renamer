@@ -58,7 +58,7 @@ def rename_file(option=1):
 
 
 def rename_extension():
-	print("en cours de développement ...")
+	pass
 
 def delete_folder_in_directory():
 	choice = input("Que voulez vous faire :"
