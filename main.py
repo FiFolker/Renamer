@@ -58,7 +58,14 @@ def rename_file(option=1):
 
 
 def rename_extension():
-	pass
+	answer = input("Dans quel dossier voulez vous modifier les noms ?\n>>")
+	extensions = input("Quelle est la nouvelle extension que vous voulez définir ?\n>>")
+	for files in os.listdir(path_directory[answer]):
+		file_split = os.path.splitext(files)
+		print("before : " + files)
+		os.rename(os.path.join(path_directory[answer], files),
+				  os.path.join(path_directory[answer], file_split[0] + "." + extensions))
+		print("after : " + file_split[0] + file_split[1])
 
 def delete_folder_in_directory():
 	choice = input("Que voulez vous faire :"
