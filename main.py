@@ -3,7 +3,8 @@ import shutil
 import json
 
 PATH_DICT = 'path_directory.json'
-
+B = 'before : '
+A = 'after : '
 def fill_path_directory():
 	with open(PATH_DICT, 'r') as file:
 		return json.load(file)
@@ -15,57 +16,89 @@ def show_files():
 
 
 def menu_rename():
-	menu = input("Menu pour renommer les fichiers :"
+	menu_rename_input = input("Menu pour renommer les fichiers :"
 				 "\n	1 : Renommer tous les fichiers avec le nom du répertoire"
 				 "\n	2 : Renommer un à un"
 				 "\n	3 : Renommer tous les fichiers avec un nom spécifique"
 				 "\n>>")
 
 	show_files()
-	rename_file(int(menu))
+	rename_file(int(menu_rename_input))
 
 
 def rename_file(option=1):
 	answer = input("Dans quel dossier voulez vous modifier les noms ?\n>>")
+
 	if option == 1:
 		i = 0
 		for files in os.listdir(path_directory[answer]):
 			file_split = os.path.splitext(files)
 			dirname = os.path.basename(path_directory[answer])
-			print("before : " + files)
+			print(B + files)
 			os.rename(os.path.join(path_directory[answer], files),
 					  os.path.join(path_directory[answer], dirname + ' ' + str(i) + file_split[1]))
-			print("after : " + dirname + ' ' + str(i) + file_split[1])
+			print(A + dirname + ' ' + str(i) + file_split[1])
 			i += 1
 	elif option == 2:
 		for files in os.listdir(path_directory[answer]):
 			file_split = os.path.splitext(files)
-			print("before : " + files)
+			print(B + files)
 			new_name = input("Quel nouveau nom voulez vous lui donner ?\n>>")
 			os.rename(os.path.join(path_directory[answer], files),
 					  os.path.join(path_directory[answer], new_name + file_split[1]))
-			print("after : " + new_name + file_split[1])
+			print(A + new_name + file_split[1])
 	elif option == 3:
 		i = 0
 		new_name = input("Quel nouveau nom voulez vous leur donner ?\n>>")
 		for files in os.listdir(path_directory[answer]):
 			file_split = os.path.splitext(files)
-			print("before : " + files)
+			print(B + files)
 			os.rename(os.path.join(path_directory[answer], files),
 					  os.path.join(path_directory[answer], new_name + ' ' + str(i) + file_split[1]))
-			print("after : " + file_split[0] + file_split[1])
+			print(A + file_split[0] + file_split[1])
 			i += 1
 
 
-def rename_extension():
+def menu_extension():
+	menu_extension_input = input("Menu pour renommer les extensions fichiers :"
+				 "\n	1 : Renommer tous les fichiers avec la même extension"
+				 "\n	2 : Renommer un à un"
+				 "\n>>")
+
+	show_files()
+	rename_extension(int(menu_extension_input))
+def rename_extension(option=1):
 	answer = input("Dans quel dossier voulez vous modifier les noms ?\n>>")
-	extensions = input("Quelle est la nouvelle extension que vous voulez définir ?\n>>")
-	for files in os.listdir(path_directory[answer]):
-		file_split = os.path.splitext(files)
-		print("before : " + files)
-		os.rename(os.path.join(path_directory[answer], files),
-				  os.path.join(path_directory[answer], file_split[0] + "." + extensions))
-		print("after : " + file_split[0] + file_split[1])
+
+	question_extension = "Quelle est la nouvelle extension que vous voulez définir ?\n>>"
+	if option == 1:
+		extensions = input(question_extension)
+		while "." in extensions:
+			print("Vous devez mettre l'extension sans le point ex : mp4")
+			extensions = input(question_extension)
+		for files in os.listdir(path_directory[answer]):
+			file_split = os.path.splitext(files)
+			print(B + files)
+			os.rename(os.path.join(path_directory[answer], files),
+					  os.path.join(path_directory[answer], file_split[0] + "." + extensions))
+			print(A + file_split[0] + "." + extensions)
+	elif option == 2:
+		for files in os.listdir(path_directory[answer]):
+			file_split = os.path.splitext(files)
+			print(B + files)
+			extensions = input(question_extension)
+			while "." in extensions:
+				print("Vous devez mettre l'extension sans le point ex : mp4")
+				extensions = input(question_extension)
+			if extensions != "":
+				os.rename(os.path.join(path_directory[answer], files),
+					  	os.path.join(path_directory[answer], file_split[0] + "." + extensions))
+				print(A + file_split[0] + "." + extensions)
+			else:
+				os.rename(os.path.join(path_directory[answer], files),
+						  os.path.join(path_directory[answer], file_split[0] + file_split[1]))
+				print(A + file_split[0] + file_split[1])
+
 
 def delete_folder_in_directory():
 	choice = input("Que voulez vous faire :"
@@ -106,17 +139,16 @@ while True:
 				 "\n	6 : Quitter \n>>")
 	try:
 		if menu == '1':
-			menu_rename() # Ouvre le sous menu permettant de choisi la façon de rename
+			menu_rename()# Ouvre le sous menu permettant de choisi la façon de rename
 		elif menu == '2':
-			add_path_to_directory() # Ajoute un chemin au dictionnaire directory
+			add_path_to_directory()# Ajoute un chemin au dictionnaire directory
 		elif menu == '3':
-			show_files() # Permet de voir le dictionnaire directory
+			show_files()# Permet de voir le dictionnaire directory
 		elif menu == '4':
 			show_files()
-			delete_folder_in_directory() # Supprime le répertoire ou le retire juste de la liste directory suivant l'option choisie
+			delete_folder_in_directory()# Supprime le répertoire ou le retire juste de la liste directory suivant l'option choisie
 		elif menu == '5':
-			print("Pas encore disponible ...")
-			rename_extension() # Permet de renommer les extensions des fichiers sans toucher aux noms
+			menu_extension() # Permet de renommer les extensions des fichiers sans toucher aux noms
 		elif menu == '6' or menu == 'Q' or menu == 'q':
 			break
 	except FileExistsError:
